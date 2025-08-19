@@ -6,30 +6,26 @@ import shutil
 import asyncio
 import threading
 import yt_dlp
-import os
 import tempfile
 import time
 import base64
 import subprocess
-import asyncio
-from asyncio import run as arun
+import socket
+import aiohttp
+import aiofiles
+from mutagen.mp3 import MP3
+from collections import deque
+import random
+from datetime import datetime, timedelta
+
 from highrise import BaseBot, __main__
 from highrise.models import User, SessionMetadata, Position
 from highrise import *
 from highrise.webapi import *
 from highrise.models_webapi import *
 from highrise.models import *
-import socket
-import aiohttp
-import aiofiles
-import yt_dlp
-from mutagen.mp3 import MP3
-from collections import deque
-import random
-from datetime import datetime, timedelta
-from HRDB import ownerz, playlist, user_ticket, vip_users, msg, restrict, promo, bot_location, ids
 
-# Pendulum removed - using datetime instead
+from HRDB import ownerz, playlist, user_ticket, vip_users, msg, restrict, promo, bot_location, ids
 
 invite = "675f21fcecbfd6b18c0474f3"
 
