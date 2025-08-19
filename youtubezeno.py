@@ -1,4 +1,3 @@
-
 import os
 import json
 import sys
@@ -29,6 +28,8 @@ from collections import deque
 import random
 from datetime import datetime, timedelta
 from HRDB import ownerz, playlist, user_ticket, vip_users, msg, restrict, promo, bot_location, ids
+
+# Pendulum removed - using datetime instead
 
 invite = "675f21fcecbfd6b18c0474f3"
 
@@ -147,7 +148,7 @@ class SEA(BaseBot):
                 await self.highrise.send_emote("emote-hyped")
                 await asyncio.sleep(7.3)
             except Exception as e:
-                break  # إذا كان الخطأ غير متوقع، نوقف الحلقة
+                break  #إذا كان الخطأ غير متوقع، نوقف الحلقة
 
     async def on_start(self, session_metadata: SessionMetadata):
         try:
@@ -239,7 +240,7 @@ class SEA(BaseBot):
                 await self.highrise.send_message(
                     message_id,
                     message_type="invite",
-                    content="Bu odaya katıl!", 
+                    content="Bu odaya katıl!",
                     room_id=invite_room)
                 await asyncio.sleep(3)
         except Exception as e:
@@ -438,7 +439,7 @@ class SEA(BaseBot):
                 await asyncio.sleep(1)
                 await self.highrise.send_whisper(user.id, "\n/rlist - Bilet fiyat listesini görün.\n/info @kullanıcı - Kullanıcının bilet bilgisini al.\n/fav - Favori çalma listesine ekle.\n/rfav [numara] favori çalma listesinden kaldır.\n/flist - Favori çalma listesini göster.")
                 await asyncio.sleep(1)
-                await self.highrise.send_whisper(user.id, "\n/cfav - Favori çalma listesini temizle.\n/transfer @kullanıcı [numara] - Biletlerinizi kullanıcıya transfer et (min 6 bilet)") 
+                await self.highrise.send_whisper(user.id, "\n/cfav - Favori çalma listesini temizle.\n/transfer @kullanıcı [numara] - Biletlerinizi kullanıcıya transfer et (min 6 bilet)")
                 return
             except:
                 pass
@@ -465,7 +466,7 @@ class SEA(BaseBot):
                 try:
                     # Şarkı sınırlaması kontrolü
                     user_songs_count = self.count_user_songs_in_queue(user.username)
-                    
+
                     if user.username in ownerz:
                         # Ownerlar için sınırsız
                         pass
@@ -479,7 +480,7 @@ class SEA(BaseBot):
                         if user_songs_count >= 1:
                             await self.highrise.send_whisper(user.id, "Aynı anda sadece 1 şarkı açabilirsiniz. Mevcut şarkınız çalana kadar bekleyin.")
                             return
-                    
+
                     query = message.split(" ", 1)[1]
                     lower_query = query.lower()
                     for item in restrict:
@@ -556,7 +557,7 @@ class SEA(BaseBot):
                 if not self.now:
                     await self.highrise.send_whisper(user.id, "Şu anda hiçbir şey çalmıyor.")
                     return
-                    
+
                 now_playing = self.now[0]
                 now = self.now[0]['title']
                 if self.now[0]['user']:
@@ -585,7 +586,7 @@ class SEA(BaseBot):
                 print("The error occurred in wallet:", e)
 
         if message.startswith("/next"):
-            try: 
+            try:
                 if len(self.req_files) > 1:
                     next_file = self.req_files[1]
                     audio_length = (next_file['duration'])
@@ -594,16 +595,16 @@ class SEA(BaseBot):
                         await self.highrise.send_whisper(user.id, f"🎵 Sıradaki şarkı: {next}\n 🎵 ▷ •ı||ıı|ıı|ı||ı|ıı||ı• {audio_length}\n (@{next_file['user']} tarafından istendi)")
                     else:
                         await self.highrise.send_whisper(user.id, f"🎵 Sıradaki şarkı: {next}\n 🎵 ▷ •ı||ıı|ıı|ı||ı|ıı||ı• {audio_length}")
-                else: 
+                else:
                     await self.highrise.send_whisper(user.id, "Sırada başka şarkı yok")
-            except Exception as e: 
-                    print(f"Error in /next command: {e}") 
+            except Exception as e:
+                    print(f"Error in /next command: {e}")
                     await self.highrise.send_whisper(user.id, "Sıra kontrol edilirken hata")
 
-        
+
 
         if message.startswith("/skip"):
-            try:    
+            try:
                 parts = message.split(" ")
                 if len(parts) > 1 and parts[1].isdigit():
                     if int(parts[1]) == 0:
@@ -627,8 +628,8 @@ class SEA(BaseBot):
                         self.req_files.remove(removed_file)
 
                         await self.highrise.chat(f"🎵 Sıradan kaldırıldı: {fix_rem}\n 🎵 ▷ •ı||ıı|ıı|ı||ı|ıı||ı• {rem_length}")
-                    else: 
-                        await self.highrise.send_whisper(user.id, f"Sırada {get_ordinal(index + 1)} numaralı şarkı bulunamadı.") 
+                    else:
+                        await self.highrise.send_whisper(user.id, f"Sırada {get_ordinal(index + 1)} numaralı şarkı bulunamadı.")
                 else:
                     if not self.now:
                         await self.highrise.send_whisper(user.id, "Şu anda hiçbir şey çalmıyor.")
@@ -647,7 +648,7 @@ class SEA(BaseBot):
                 print(f"Error in /skip command: {e}")
                 await self.highrise.send_whisper(user.id, "Hiçbir şey çalmıyor.")
 
-        if message.startswith("/queue"): 
+        if message.startswith("/queue"):
             try:
                 if len(self.req_files) > 0:
                     if self.now and self.now[0]['url'] not in AUDIO_FILES:
@@ -832,8 +833,8 @@ class SEA(BaseBot):
                 await self.highrise.send_whisper(user.id, f"Hata: {e}")
 
         if message.startswith("/flist"):
-            try: 
-                if playlist: 
+            try:
+                if playlist:
                     message_content = ""
                     for idx, file in enumerate(list(playlist), start=1):
                         item = f"{idx}. {file['title']}\n"
@@ -943,7 +944,7 @@ class SEA(BaseBot):
                     print("Error in /msg:", e)
 
         if message.startswith("/res ") and user.username in ownerz:
-            try:    
+            try:
                 res = message.split(" ", 1)[1]
                 if not res in restrict:
                     restrict.append(res)
@@ -954,7 +955,7 @@ class SEA(BaseBot):
                 print(f"Error in /restrict command: {e}")
 
         if message.startswith("/unres ") and user.username in ownerz:
-            try:    
+            try:
                 res = message.split(" ", 1)[1]
                 if res in restrict:
                     restrict.remove(res)
@@ -965,7 +966,7 @@ class SEA(BaseBot):
                 print(f"Error in /unrestrict command: {e}")
 
         if message.startswith("/promo ") and user.username in ownerz:
-            try:    
+            try:
                 prom = message.lstrip("/promo ").strip()
                 if prom:
                     if prom not in promo:
@@ -979,7 +980,7 @@ class SEA(BaseBot):
                 print(f"Error in /promo command: {e}")
 
         if message.startswith("/rpromo ") and user.username in ownerz:
-            try:    
+            try:
                 prom = message.lstrip("/promo ").strip()
                 if prom:
                     if prom in promo:
@@ -1033,10 +1034,10 @@ class SEA(BaseBot):
                     await self.highrise.send_whisper(user.id, "Efendim, yeterli bakiyem yok.")
                     return
                 """Possible values are: "gold_bar_1",
-            "gold_bar_5", "gold_bar_10", "gold_bar_50", 
-            "gold_bar_100", "gold_bar_500", 
+            "gold_bar_5", "gold_bar_10", "gold_bar_50",
+            "gold_bar_100", "gold_bar_500",
             "gold_bar_1k", "gold_bar_5000", "gold_bar_10k" """
-                bars_dictionary = {10000: "gold_bar_10k", 
+                bars_dictionary = {10000: "gold_bar_10k",
                                5000: "gold_bar_5000",
                                1000: "gold_bar_1k",
                                500: "gold_bar_500",
@@ -1334,7 +1335,7 @@ class SEA(BaseBot):
                         attempts += 1
                         await asyncio.sleep(1)
                         continue
-                    
+
                     try:
                         file_size = os.path.getsize(buffered_file_path)
                         if file_size >= 4 * 1024:
@@ -1391,7 +1392,7 @@ class SEA(BaseBot):
                         self.message.clear()
                         await asyncio.sleep(5)
                         continue
-                        
+
                     fix_nowplaying = nowplaying['title']
                     if nowplaying['user']:
                         await self.highrise.chat(f"🎵 Şu anda çalıyor: {fix_nowplaying}\n 🎵 ▷ •ı||ıı|ıı|ı||ı|ıı||ı• {nowplaying['audio_length']}\n (@{nowplaying['user']} tarafından istendi)")
@@ -1475,7 +1476,7 @@ def start_streaming(bot_instance):
                 try:
                     while True:
                         audio_file = None
-                        
+
                         # Check for requested songs first
                         if bot_instance.req_files:
                             # Verify file still exists
@@ -1486,7 +1487,7 @@ def start_streaming(bot_instance):
                                 print(f"Requested file missing: {bot_instance.req_files[0]['url']}")
                                 bot_instance.req_files.popleft()
                                 continue
-                        
+
                         # Check playlist if no requests
                         elif playlist:
                             available_playlist = [item for item in playlist if os.path.exists(item['url'])]
@@ -1494,7 +1495,7 @@ def start_streaming(bot_instance):
                                 erm = random.choice(available_playlist)
                                 audio_file = erm['url']
                                 print(f"Streaming from playlist: {erm['title']}")
-                        
+
                         # Default to Nothing.mp3 when queue is empty
                         if audio_file is None:
                             audio_file = random.choice(AUDIO_FILES)
@@ -1502,15 +1503,15 @@ def start_streaming(bot_instance):
                             # print(f"Streaming default audio: {audio_file}")
 
                         success = stream_audio(sock, audio_file, bot_instance)
-                        
+
                         if bot_instance.skip:
                             bot_instance.skip = False
                             continue
-                        
+
                         if not success:
                             sock.close()
                             break
-                        
+
                         # Longer delay when playing default audio to reduce spam
                         if audio_file in AUDIO_FILES:
                             time.sleep(2)
@@ -1533,7 +1534,7 @@ def stream_audio(sock, audio_file, bot_instance):
         # Only print for non-default audio files to reduce spam
         if audio_file not in AUDIO_FILES:
             print(f"Streaming audio file: {audio_file}")
-        
+
         # Clear current song info before setting a new one
         bot_instance.now.clear()
         bot_instance.message.clear()
@@ -1590,31 +1591,31 @@ def stream_audio(sock, audio_file, bot_instance):
         ]
 
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-        
+
         while True:
             data = process.stdout.read(4096)
-            
+
             if bot_instance.skip:
                 if audio_file not in AUDIO_FILES:
                     print(f"Skipping: {audio_file}")
                 process.terminate()
-                
+
                 # Remove from req_files if it was a requested song
                 if bot_instance.req_files and bot_instance.req_files[0]['url'] == audio_file:
                     bot_instance.req_files.popleft()
-                
+
                 # Clean up temporary file if it's not a default AUDIO_FILE and not in playlist
                 if audio_file not in AUDIO_FILES and not any(item['url'] == audio_file for item in playlist):
                     cleanup_temp_file(bot_instance, audio_file)
-                
+
                 return True # Indicate successful skip
-                
+
             if not data:
                 process.terminate()
                 # Only print for non-default audio files to reduce spam
                 if audio_file not in AUDIO_FILES:
                     print(f"Finished streaming: {audio_file}")
-                
+
                 # Clean up req_files when song finishes naturally
                 if bot_instance.req_files and bot_instance.req_files[0]['url'] == audio_file:
                     bot_instance.req_files.popleft()
@@ -1622,12 +1623,12 @@ def stream_audio(sock, audio_file, bot_instance):
                 # Clean up temporary file if it's not a default AUDIO_FILE and not in playlist
                 if audio_file not in AUDIO_FILES and not any(item['url'] == audio_file for item in playlist):
                     cleanup_temp_file(bot_instance, audio_file)
-                
+
                 # Clear now playing info when song ends
                 bot_instance.now.clear()
-                
+
                 return True # Indicate successful stream completion
-            
+
             try:
                 sock.sendall(data)
             except (BrokenPipeError, ConnectionResetError) as e:
@@ -1635,7 +1636,7 @@ def stream_audio(sock, audio_file, bot_instance):
                 process.terminate()
                 return False # Indicate connection error
             time.sleep(0.05)
-            
+
     except Exception as e:
         print(f"Streaming error: {e}")
         return False # Indicate streaming error
